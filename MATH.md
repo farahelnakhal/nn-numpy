@@ -688,23 +688,3 @@ For a batch of $m$ examples through a layer of size $n_{l-1}\to n_l$:
 Summed over all $L$ layers, one forward+backward pass over a batch is
 $O\!\left(m\sum_{l=1}^L n_l n_{l-1}\right)$ — linear in batch size and
 in the total number of weights in the network.
-
----
-
-## Summary Table
-
-| Quantity | Formula | Shape |
-|---|---|---|
-| Pre-activation | $Z^{[l]} = W^{[l]}A^{[l-1]}+b^{[l]}$ | $n_l\times m$ |
-| ReLU | $A^{[l]}=\max(0,Z^{[l]})$ | $n_l\times m$ |
-| Softmax | $A^{[L]}_{k,i}=e^{Z^{[L]}_{k,i}}/\sum_j e^{Z^{[L]}_{j,i}}$ | $10\times m$ |
-| Loss | $J=-\frac1m\sum Y\odot\log A^{[L]}$ | scalar |
-| Output error | $dZ^{[L]}=A^{[L]}-Y$ | $10\times m$ |
-| Hidden error | $dZ^{[l]}=(W^{[l+1]\top}dZ^{[l+1]})\odot\text{ReLU}'(Z^{[l]})$ | $n_l\times m$ |
-| Weight grad | $dW^{[l]}=\tfrac1m dZ^{[l]}A^{[l-1]\top}+\tfrac{\lambda}{m}W^{[l]}$ | $n_l\times n_{l-1}$ |
-| Bias grad | $db^{[l]}=\tfrac1m dZ^{[l]}\mathbf1_m$ | $n_l\times 1$ |
-| He init | $W^{[l]}\sim\mathcal N(0,\,2/n_{l-1})$ | $n_l\times n_{l-1}$ |
-| Momentum | $v\leftarrow\beta v+(1-\beta)d\theta,\ \ \theta\leftarrow\theta-\alpha v$ | — |
-
-Every row above corresponds one-to-one with a line of code in
-`model.py`, `init.py`, `activations.py`, and `losses.py`.
